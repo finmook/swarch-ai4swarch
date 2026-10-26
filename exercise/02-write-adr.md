@@ -35,10 +35,11 @@ language: Thai
 
 | เกณฑ์ | Run a | Run b |
 |---|---|---|
-| ใช้ตัวเลขจาก scenario หรือไม่ (latency, ช่วงพีก, ข้อจำกัดของ MailFast) | | |
-| ทางเลือกที่พิจารณา (ระบุ) | | |
-| จัดการแต้มสะสมแบบ "ครั้งเดียวเท่านั้น" และ rate limit ของ MailFast หรือไม่ อย่างไร | | |
-| มีสิ่งที่แต่งขึ้นเองหรือไม่ (ตัวเลข เครื่องมือ หรือข้อเท็จจริงที่ไม่มีใน scenario) | | |
+| ใช้ตัวเลขจาก scenario หรือไม่ (latency, ช่วงพีก, ข้อจำกัดของ MailFast) |ไม่ใช้เลย เพราะไม่ได้อ่าน scenario เรื่องที่ไม่รู้ย้ายไปไว้ใน Open questions|ใช้ครบ: p95 ไม่เกิน 500 ms, peak 200 orders/s, MailFast p95 1.5 s / p99 8 s / fail 0.5% / 50 emails/s, แต้มภายใน 1 นาทีและได้ครั้งเดียว และคำนวณ backlog 200 − 50 = 150 emails/s |
+| ทางเลือกที่พิจารณา (ระบุ) |3 แบบ: (A) synchronous fan-out (B) event-driven pub/sub ผ่าน broker ← เลือก (C) orchestrator service ใหม่ โดยไม่ระบุว่าใช้ broker ตัวไหน |4 แบบ: (1) sync gRPC (2) async ภายใน process (goroutine) (3) RabbitMQ self-hosted ← เลือก (4) Kafka self-hosted |
+| จัดการแต้มสะสมแบบ "ครั้งเดียวเท่านั้น" และ rate limit ของ MailFast หรือไม่ อย่างไร |แต้มใช้ order ID เป็น idempotency key (พูดแบบกว้าง ๆ) ส่วน rate limit ไม่รู้ตัวเลข มีแค่ retry + backoff + dead-letter queue |แต้มกันซ้ำด้วย order_id ใน loyaltyservice ส่วนอีเมลจำกัดอัตราไม่เกิน 50/s โดยให้ส่วนที่เกินรอในคิว แต่ยังมีความเสี่ยงที่ event หายถ้า publish ไม่สำเร็จ เพราะ checkout ไม่มี DB สำหรับ outbox |
+| มีสิ่งที่แต่งขึ้นเองหรือไม่ (ตัวเลข เครื่องมือ หรือข้อเท็จจริงที่ไม่มีใน scenario) |แทบไม่มี แต่ยกตัวอย่างชื่อ broker (RabbitMQ, Kafka, Pub/Sub) และใส่ protocol HTTPS ให้ MailFast ใน diagram เอง |ใส่ภาษา Go / Node.js ให้ frontend, payment และ shipping ใน diagram (ติด [Inferred] ไว้) และข้อความ "อีเมลช้าเป็นนาทีถึงชั่วโมง" ที่ประมาณเอง เพราะ scenario ไม่ได้บอกว่าช่วงพีกยาวแค่ไหน ส่วนเลขบรรทัดใน main.go ที่อ้าง ถูกต้อง (ตรวจเอง: บรรทัด 233 มี uuid.NewUUID() และ log.Warnf อยู่ที่บรรทัด 274 ในช่วง 273–277)
+และ Locust ก็มีที่มาจริงจาก ADR-0001 |
 
 ## รับผิดชอบ ADR ฉบับสุดท้ายของตัวเอง
 
@@ -51,6 +52,6 @@ language: Thai
 
 | # | สิ่งที่เปลี่ยนจากร่างของ AI | เหตุผล |
 |---|---|---|
-| 1 | | |
-| 2 | | |
-| 3 | | |
+| 1 |จาก ai เป็นอภิมุข สาโรวาท(ผมเอง)|ADR ต้องมีคนรับผิดชอบการตัดสินใจ |
+| 2 |ภาษา เป็น no evidence |ไฟล์ที่ AI อ่านใน Run b ไม่ได้บอกภาษาของ frontend, payment และ shipping |
+| 3 |เพิ่ม new db ใน architecture สำหรับ orders+ transactional outbox |AI เลือกแค่ retry + alert ซึ่งยังทำให้แต้มหายได้ แต่ scenario บอกว่าแต้มต้องได้ภายใน 1 นาทีและห้ามหาย |
