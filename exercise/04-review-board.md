@@ -1,63 +1,77 @@
-**ภาษา:** ภาษาไทย | [English](04-review-board.en.md)
+**Language:** ภาษาไทย | [English](04-review-board.en.md)
 
-# ส่วน B: คณะกรรมการรีวิวสถาปัตยกรรม (ประมาณ 25 นาที, กลุ่มละ 4 คน)
+# Part B: Architecture review board (approximately 25 min, groups of 4)
 
-> **เชื่อมโยงกับการบรรยาย:** AICH4 (การรีวิวต้องอาศัยความเชี่ยวชาญในโดเมน; *ฟังดูดี ≠ เหมาะสม*), Pillar 5 (AI เป็น Chief Analyst มนุษย์เป็น Chief Strategist), JSS (85% ของงานวิจัยให้มนุษย์มีส่วนร่วมในกระบวนการ)
-> **คำถาม:** คณะกรรมการที่เป็นมนุษย์จับประเด็นใดได้ที่ผลรีวิวของ AI พลาดไป และเพราะเหตุใด
+> **Lecture link:** AICH4 (reviews need domain expertise; *plausible ≠ appropriate*), Pillar 5 (AI as Chief Analyst, humans as Chief Strategist), JSS (85% of studies keep a human in the loop).
+> **Question:** what does a human review board catch that the AI's review missed, and why?
 
-คณะกรรมการรีวิวสถาปัตยกรรมของบริษัทประชุมเพื่ออนุมัติการออกแบบ R-12 ก่อนเทศกาลลดราคา 11.11 โดยนำ ADR หนึ่งฉบับเข้าที่ประชุม **สถาปนิก**นำเสนอ ADR, **AI analyst** นำเสนอผลรีวิวของ AI และผู้มีส่วนได้ส่วนเสียสองคนนำข้อมูลที่ AI ไม่เคยเห็นมาด้วย
+The company's architecture review board meets to approve the R-12 design before the 11.11 sale. One ADR goes to the board: the **architect** presents it, the **AI analyst** presents the AI's review, and two stakeholders bring knowledge the AI never saw.
 
-## 1. จัดตั้งคณะกรรมการ (2 นาที)
+## 1. Form the board (2 min)
 
-ในกลุ่มละ 4 คน ให้เลือก ADR ของสมาชิก**หนึ่งคน**มารีวิว (`docs/adr/0002-*.md` พร้อม `exercise/outputs/3-review.md` ของคนนั้น) แล้วแบ่งบทบาท
+In groups of 4, choose **one** member's ADR to review (`docs/adr/0002-*.md`, plus their `exercise/outputs/3-review.md`). Then assign roles:
 
-| บทบาท | ใคร | สิ่งที่นำมา |
+| Role | Who | Brings |
 |---|---|---|
-| **สถาปนิก** | ผู้เขียน ADR | ปกป้อง ADR |
-| **AI analyst** | | อ่านผลรีวิวของ AI เท่านั้น ห้ามใส่ความเห็นของตัวเอง |
-| **Product owner** | | การ์ดบทบาท P (ฝั่งธุรกิจ) |
-| **Site reliability engineer (SRE)** | | การ์ดบทบาท S (ฝั่งปฏิบัติการ) |
+| **Architect** | the ADR's author (Sippakorn Thunyahan) | defends the ADR |
+| **AI analyst** | Arin Ariyata | reads out the AI's review only, and may not add their own opinions |
+| **Product owner** | Apimook Sarovath | role card P (business side) |
+| **Site reliability engineer (SRE)** | Thitiwut Ariyaprayoon | role card S (operations side) |
+| **security & privacy officer** | Akaporn Ungsittipoonporn | role card X |
 
-กลุ่มละ 5 คน ให้เพิ่ม**เจ้าหน้าที่ความปลอดภัยและความเป็นส่วนตัว** (การ์ดบทบาท X) กลุ่มละ 3 คน ให้สถาปนิกรับบท AI analyst ด้วย
+Groups of 5 add a **security & privacy officer** (role card X). In groups of 3, the architect also plays the AI analyst.
 
-**การ์ดบทบาท**อยู่ใน [`docs/review-board/`](../docs/review-board/README.md) ผู้มีส่วนได้ส่วนเสียแต่ละคนอ่าน**เฉพาะการ์ดของตัวเอง** และเก็บเป็นความลับจนถึงเวลาประชุม
+**Role cards** are in [`docs/review-board/`](../docs/review-board/README.en.md). Each stakeholder reads **only their own card** and keeps it secret until the meeting.
 
-## 2. การประชุม (15 นาที)
+## 2. Meeting (15 min)
 
-| นาที | ขั้นตอน |
+| Min | Step |
 |---|---|
-| 3 | **สถาปนิก**นำเสนอการตัดสินใจ ทางเลือกที่พิจารณา และผลที่ตามมาหลัก ๆ |
-| 3 | **AI analyst** อ่านข้อค้นพบและคำตัดสินของ AI แบบคำต่อคำ |
-| 7 | **อภิปรายเปิด** ผู้มีส่วนได้ส่วนเสียแต่ละคนยกข้อกังวลจากการ์ดของตัวเองด้วยคำพูดของตัวเอง สถาปนิกตอบ และทุกคนถาม AI analyst ได้ว่า "AI เห็นประเด็นนี้หรือไม่" |
-| 2 | **ตัดสินใจ** คณะกรรมการลงมติ: อนุมัติ / อนุมัติโดยมีเงื่อนไขให้แก้ไข / ไม่อนุมัติ |
+| 3 | **Architect** presents the decision, the options considered and the main consequences |
+| 3 | **AI analyst** reads the AI review's findings and verdict, word for word |
+| 7 | **Open discussion.** Each stakeholder raises the concerns from their card, in their own words. The architect responds; anyone may ask the AI analyst "did the AI see this?" |
+| 2 | **Decision.** The board votes: accept / accept with changes / reject |
 
-## 3. บันทึกผลการตัดสินใจ (8 นาที, ทำร่วมกัน)
+## 3. Record the decision (8 min, together)
 
-**ADR ที่รีวิว:** `docs/adr/0002-…` โดย …
-**สมาชิกและบทบาท:** …
+**ADR reviewed:** `docs/adr/0002-post-order-processing.md` by Sippakorn
+**Board members and roles:** Sippakorn (Architect), Arin (AI analyst), Apimook (Product owner), Thitiwut (SRE), Akaporn (Security & privacy officer)
 
-**มติ:** อนุมัติ / อนุมัติโดยมีเงื่อนไข / ไม่อนุมัติ
+**Decision:** **accept with changes**
 
-**สิ่งที่ต้องแก้ไข:**
-1. …
-2. …
-3. …
+**Required changes:**
+1. **Durable state and database:** specify the durable order state, database choice and crash-recovery behaviour before implementation, and meet the ops rule for new stateful components (dashboards, alerting, backups, runbook; about 1 week) before 11.11.
+2. **Alerting and traceability:** define the alert that fires when MailFast stops working (threshold in minutes and who receives it), and a way to look up one order's email status (query, dashboard or trace ID linking checkout to the task).
+3. **Privacy:** get legal approval for MailFast under PDPA before 11.11, or switch to an in-country email provider as a fallback. Analytics events carry only `order_id` (no email or name); the task table is encrypted at rest and records, including quarantined tasks, are deleted within 30 days.
+4. **Loyalty business rules:** show new points on the order confirmation page immediately, as marketing promised, or agree a change with the business first. Define how points are reversed on cancel/refund, and keep idempotency so retries never award points twice.
+5. **Delivery plan and fraud scoring:** a build and test plan, including a load test at 200 orders/s, that fits in the 3 weeks before 11.11. State that future fraud scoring must be able to reject an order before confirmation, not run as a post-order background action.
 
-**ใครยกประเด็นใด** ระบุทุกข้อกังวลที่คณะกรรมการอภิปราย
+**Who raised what?** List every concern the board discussed.
 
-| # | ข้อกังวล | ผู้ยกประเด็น (ผลรีวิว AI / สถาปนิก / PO / SRE / security) | อยู่ในผลรีวิวของ AI หรือไม่ | AI มีทางรู้ได้หรือไม่ เพราะเหตุใด |
+| # | Concern | Raised by (AI review / architect / PO / SRE / security) | Was it in the AI's review? | Could the AI have known? Why or why not? |
 |---|---|---|---|---|
-| 1 | | | | |
-| 2 | | | | |
-| 3 | | | | |
-| 4 | | | | |
-| 5 | | | | |
+| 1 | MailFast stores data in the US; PDPA needs a legal basis for cross-border transfer, legal hasn't approved it, and the ADR has no fallback | Security | No | No: MailFast's data location and approval status aren't in the scenario or the ADR |
+| 2 | Analytics events must not contain customer email or name (company policy), but the ADR leaves the payload undefined | Security | No | Couldn't know the policy, but the ADR itself says the payload is undefined, so the AI could have flagged a privacy risk |
+| 3 | Tasks holding customer emails must be encrypted at rest and kept ≤ 30 days, but the ADR doesn't mention encryption and forbids discarding pending tasks | Security | Partly: mentions data retention criteria, not encryption | Couldn't know the 30-day limit or encryption rule, but the conflict with "never discard tasks" can be inferred from the ADR |
+| 4 | New stateful component needs dashboards, alerting, backups and a runbook (about 1 week) before production; database still "to be selected" | SRE | Partly: flags the unselected database, not the ops readiness work | Saw the missing database choice in the ADR; couldn't know the company's ops rule or the 1-week effort |
+| 5 | Last year's 20-minute email outage went unnoticed; ADR has no alert thresholds or recipient | SRE | Partly: verdict asks to define "escalation ownership" | Could infer that alerting is vague; couldn't know about last year's outage |
+| 6 | Can't trace one order across the async boundary ("I never got my email") | SRE | No | Partly: the vague "central view of action outcomes" in the ADR could have been flagged as an observability gap |
+| 7 | Team's RabbitMQ experience is laptop-only; an HA broker would need 3 nodes and 2 weeks of budget approval, which supports avoiding a broker | SRE | No | No: the scenario only says "two have used RabbitMQ", not that it was never in production |
+| 8 | Loyalty "within 1 minute" doesn't match marketing's promise of "see your points immediately" | PO | No | No: the marketing promise isn't in the scenario or the ADR |
+| 9 | No rule for reversing points on cancel/refund | PO | No | Partly: a domain-aware reviewer could ask, but the real business rule isn't in the files |
+| 10 | Duplicate points cost the company real money; idempotency must be guaranteed | PO | Yes: non-risk on atomic loyalty dedup, plus a replay scenario | Knew the mechanism from the scenario's "exactly once", but not the money value of points |
+| 11 | Can it be built and load-tested in the 3 weeks before 11.11? | PO | Partly: verdict says to run load/crash/outage tests before claiming compliance, but gives no timeline | No: the 3-week deadline isn't in the scenario or the ADR |
+| 12 | Fraud scoring must happen before confirmation, so it can't be a post-order background action | PO | No (fraud is only mentioned as a future coupling concern) | Partly: R-12 lists fraud scoring as a post-order action, but general domain knowledge says fraud checks usually block orders |
+| 13 | Stable order identity and payment/shipping reconciliation are still open; a crash before the order is saved could leave a paid/shipped order with no recoverable work, or repeat effects | AI review | Yes (Risk) | Yes: derived from the ADR's own open questions and the order flow |
+| 14 | Checkout and the growing email backlog share the same durable storage; a long MailFast outage could fill it and stop checkout | AI review | Yes (Risk) | Yes: reasoning from the ADR's design and the scenario's MailFast limits |
+| 15 | If `loyaltyservice` is down for more than 60 s, "orders never fail" and "points within 1 minute" can't both hold; needs a business decision | AI review | Yes (QA scenario 3 and verdict item 2) | Yes: a contradiction between two constraints in the scenario |
 
-**ข้อค้นพบที่ดีที่สุดของ AI** (ที่มนุษย์มองข้ามไป): …
-**ข้อค้นพบที่อ่อนที่สุดของ AI** (กว้างเกินไป ผิด หรือไม่เกี่ยวข้อง): …
+**The AI's best finding** (one the humans had missed): Checkout and the growing email backlog share the same durable storage, so a long MailFast outage could fill the storage and stop checkout itself. This quietly breaks the "an order must never fail because email is down" requirement, and none of the stakeholders raised it.
 
-## 4. สะท้อนคิดรายบุคคล (≤ 150 คำ, ทุกคน, ทำหลังคาบได้)
+**The AI's weakest finding** (generic, wrong or irrelevant): "Source-code claims citing `checkoutservice/main.go` are Not evidenced in the provided files." This isn't a flaw in the design; the review prompt simply didn't give the AI `main.go`. Its final verdict item 3 ("set measurable budgets and run the validation") is also generic advice that applies to any ADR.
 
-เขียนใน [`05-reflection.md`](05-reflection.md): หลังจากทำส่วน A และส่วน B แล้ว นิสิตจะไว้วางใจให้ AI ทำงานส่วนใดของสถาปนิก และจะเก็บงานส่วนใดไว้ให้มนุษย์ ยกตัวอย่างที่เป็นรูปธรรมหนึ่งตัวอย่างจากการประชุมคณะกรรมการ
+## 4. Individual reflection (≤ 150 words, each student, after class is fine)
 
-> สมาชิกทุกคนในกลุ่ม commit บันทึกนี้ลงใน repository ของตัวเอง (คัดลอกข้อความเดียวกัน) เพื่อให้ทุกคนส่ง repository ที่ครบถ้วน
+Write in [`05-reflection.md`](05-reflection.en.md): after Part A and Part B, which parts of an architect's work would you trust AI with, and which would you keep for humans? Use one concrete example from your board meeting.
+
+> Each group member commits this record to their own repository (copy the same text), so everyone submits a complete repo.
